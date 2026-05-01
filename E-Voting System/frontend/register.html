@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enrol | National E-Voting Portal</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- LAYER 1: ACCESSIBILITY -->
+    <div class="accessibility-bar">
+        <div class="container">
+            <div>NATIONAL DIGITAL INFRASTRUCTURE</div>
+            <div>Official Portal | Security Level: High</div>
+        </div>
+    </div>
+
+    <!-- LAYER 2: BRANDING -->
+    <header class="main-branded-header">
+        <div class="container">
+            <div class="emblem-section">
+                <img src="img/logo.png" alt="MyVote Logo">
+                <div class="title-box">
+                    <h1>National E-Voting Authority</h1>
+                    <p>Digital Democratic Services Division</p>
+                </div>
+            </div>
+            <div class="side-logo">
+                <h2 style="color: var(--uidai-dark); font-weight: 900; font-size: 28px; letter-spacing: -1.5px;">MyVote</h2>
+            </div>
+        </div>
+    </header>
+
+    <!-- LAYER 3: NAVIGATION -->
+    <nav>
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="index.html">HOME</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="auth-panel" style="max-width: 480px;">
+            <h2 style="color: var(--uidai-dark); margin-bottom: 8px; font-weight: 800;">Voter Enrolment</h2>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 30px;">Enroll your identity into the secure national ledger. A pre-approved Master ID is mandatory.</p>
+            
+            <div class="form-group-v2">
+                <label>Pre-Approved Voter ID</label>
+                <input type="text" id="reg_voter_id" placeholder="e.g., V123">
+            </div>
+            
+            <div class="form-group-v2">
+                <label>Full Legal Name</label>
+                <input type="text" id="reg_name" placeholder="As per Identity Document">
+            </div>
+            
+            <div class="form-group-v2">
+                <label>Set Secure Password</label>
+                <input type="password" id="reg_password" placeholder="••••••••">
+            </div>
+            
+            <button id="regBtn" class="btn-submit-ballot" style="background: var(--gov-orange);">ENROL NOW <i class="fas fa-id-badge"></i></button>
+            <div style="text-align: center; margin-top: 25px; font-size: 13px; color: var(--text-muted);">
+                Already have an account? <a href="login.html" style="color: var(--uidai-blue); font-weight: 700; text-decoration: none;">Back to Login</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification-box"></div>
+
+    <script src="js/utils.js"></script>
+    <script>
+        document.getElementById('regBtn').addEventListener('click', async () => {
+            const voter_id = document.getElementById('reg_voter_id').value;
+            const name = document.getElementById('reg_name').value;
+            const password = document.getElementById('reg_password').value;
+            if(!voter_id || !name || !password) return showMessage("All fields are required");
+            try {
+                const res = await fetch("/api/register", {
+                    method: "POST", headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({ voter_id, name, password })
+                });
+                const text = await res.text();
+                showMessage(text);
+                if (text.includes("Successfully")) { setTimeout(() => window.location.href = 'login.html', 2000); }
+            } catch (err) { showMessage("Registration Failed"); }
+        });
+    </script>
+</body>
+</html>
